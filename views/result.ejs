@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CopyCheck AI Results</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="page-shell">
+        <nav class="topbar">
+            <div class="brand-block">
+                <span class="brand-mark">✓</span>
+                <span class="brand-name">CopyCheck AI</span>
+            </div>
+            <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle color theme">☀️ Light</button>
+        </nav>
+
+        <header class="hero hero-results">
+            <div class="hero-copy">
+                <p class="eyebrow">Analysis complete</p>
+                <h1>CopyCheck AI Results</h1>
+                <p class="hero-text">Your comparison is ready. Review the similarity overview and the AI-generated explanation below.</p>
+            </div>
+        </header>
+
+        <main class="container results-container">
+            <%
+                const parts = typeof result === 'string' ? result.split('\n\n') : [];
+                let similarity = '';
+                let risk = '';
+                let explanation = '';
+                let riskClass = 'risk-value';
+
+                if (parts.length >= 3) {
+                    similarity = parts[0].replace('Similarity Percentage: ', '').trim();
+                    risk = parts[1].replace('Risk Level: ', '').trim();
+                    explanation = parts[2].replace('AI Analysis:', '').trim();
+                } else {
+                    similarity = 'Pending';
+                    risk = 'Pending';
+                    explanation = result;
+                }
+
+                const normalizedRisk = (risk || '').toLowerCase();
+                if (normalizedRisk.includes('low')) {
+                    riskClass = 'risk-value risk-low';
+                } else if (normalizedRisk.includes('medium')) {
+                    riskClass = 'risk-value risk-medium';
+                } else if (normalizedRisk.includes('high')) {
+                    riskClass = 'risk-value risk-high';
+                }
+            %>
+
+            <div class="results-grid">
+                <section class="metric-card">
+                    <h3>Similarity Percentage</h3>
+                    <p class="metric-value"><%= similarity %></p>
+                </section>
+
+                <section class="metric-card">
+                    <h3>Risk Level</h3>
+                    <p class="metric-value <%= riskClass %>"><%= risk %></p>
+                </section>
+            </div>
+
+            <section class="analysis-card">
+                <h3>AI Analysis</h3>
+                <p><%= explanation %></p>
+            </section>
+
+            <section class="comparison-card">
+                <h3>Compared Submissions</h3>
+                <div class="comparison-grid">
+                    <div>
+                        <h4>Submission A</h4>
+                        <p id="submissionAContent"></p>
+                    </div>
+                    <div>
+                        <h4>Submission B</h4>
+                        <p id="submissionBContent"></p>
+                    </div>
+                </div>
+            </section>
+
+            <a class="secondary-link" href="/">Check Another Submission</a>
+        </main>
+    </div>
+
+    <script>
+        const toggleButton = document.getElementById('themeToggle');
+        const submissionAContent = document.getElementById('submissionAContent');
+        const submissionBContent = document.getElementById('submissionBContent');
+        const savedTheme = localStorage.getItem('copycheck-theme');
+        const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+        const isLight = savedTheme ? savedTheme === 'light' : prefersLight;
+
+        document.body.classList.toggle('light', isLight);
+        if (toggleButton) {
+            toggleButton.textContent = isLight ? '🌙 Dark' : '☀️ Light';
+        }
+
+        if (submissionAContent) {
+            submissionAContent.textContent = localStorage.getItem('copycheck-text-a') || 'No submission available.';
+        }
+
+        if (submissionBContent) {
+            submissionBContent.textContent = localStorage.getItem('copycheck-text-b') || 'No submission available.';
+        }
+
+        toggleButton?.addEventListener('click', () => {
+            const lightMode = document.body.classList.toggle('light');
+            localStorage.setItem('copycheck-theme', lightMode ? 'light' : 'dark');
+            toggleButton.textContent = lightMode ? '🌙 Dark' : '☀️ Light';
+        });
+    </script>
+</body>
+</html>

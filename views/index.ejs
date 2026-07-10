@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CopyCheck AI</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div id="loadingOverlay" class="loading-overlay" aria-hidden="true">
+        <div class="loading-card">
+            <div class="spinner"></div>
+            <h2>Analyzing submissions with CopyCheck AI...</h2>
+            <p>Calculating similarity, classifying risk, and generating AI analysis using Ollama.</p>
+        </div>
+    </div>
+
+    <div class="page-shell">
+        <nav class="topbar">
+            <div class="brand-block">
+                <span class="brand-mark">✓</span>
+                <span class="brand-name">CopyCheck AI</span>
+            </div>
+            <div class="theme-switcher">
+                <span id="themeLabel" class="theme-label">Dark Mode</span>
+                <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle color theme" aria-pressed="false">
+                    <span class="theme-toggle-knob"></span>
+                </button>
+            </div>
+        </nav>
+
+        <header class="hero">
+            <div class="hero-copy">
+                <p class="eyebrow">Academic integrity, reimagined</p>
+                <h1>Compare submissions with clarity and confidence.</h1>
+                <p class="hero-text">CopyCheck AI brings a polished, student-friendly experience to reviewing two texts, spotting overlap, and understanding the risk level with a short AI summary.</p>
+                <div class="hero-actions">
+                    <a class="primary-link" href="#analysis-form">Start checking</a>
+                    <a class="secondary-link" href="#how-it-works">See how it works</a>
+                    <a class="secondary-link" href="#telegram-bot">Try Telegram bot</a>
+                </div>
+            </div>
+
+            <div class="hero-illustration" aria-hidden="true">
+                <!-- Original simple SVG illustration showing two documents and an AI connector -->
+                <svg viewBox="0 0 800 500" preserveAspectRatio="xMidYMid meet" class="illustration-svg">
+                    <defs>
+                        <linearGradient id="g1" x1="0" x2="1">
+                            <stop offset="0%" stop-color="#7c8cff" />
+                            <stop offset="100%" stop-color="#5b6dff" />
+                        </linearGradient>
+                    </defs>
+                    <!-- Document A -->
+                    <rect x="48" y="72" width="240" height="320" rx="12" fill="var(--illu-doc)" stroke="var(--illu-stroke)" />
+                    <rect x="64" y="96" width="200" height="18" rx="4" fill="var(--illu-text)" />
+                    <rect x="64" y="122" width="160" height="12" rx="3" fill="var(--illu-subtext)" />
+                    <rect x="64" y="142" width="180" height="12" rx="3" fill="var(--illu-subtext)" />
+
+                    <!-- Document B -->
+                    <rect x="512" y="72" width="240" height="320" rx="12" fill="var(--illu-doc)" stroke="var(--illu-stroke)" />
+                    <rect x="528" y="96" width="200" height="18" rx="4" fill="var(--illu-text)" />
+                    <rect x="528" y="122" width="180" height="12" rx="3" fill="var(--illu-subtext)" />
+                    <rect x="528" y="142" width="160" height="12" rx="3" fill="var(--illu-subtext)" />
+
+                    <!-- AI node in center -->
+                    <g transform="translate(360,210)">
+                        <circle cx="80" cy="0" r="68" fill="url(#g1)" opacity="0.95" />
+                        <g transform="translate(42,-18)" fill="var(--illu-ai-text)" opacity="0.95">
+                            <rect x="0" y="0" width="76" height="8" rx="4" />
+                            <rect x="0" y="18" width="52" height="8" rx="4" />
+                            <rect x="0" y="36" width="64" height="8" rx="4" />
+                        </g>
+                    </g>
+
+                    <!-- Connectors -->
+                    <path d="M288 200 C340 180, 380 160, 432 178" stroke="var(--illu-connector)" stroke-width="3" fill="none" stroke-linecap="round" />
+                    <path d="M368 178 C420 200, 460 220, 512 210" stroke="var(--illu-connector)" stroke-width="3" fill="none" stroke-linecap="round" />
+
+                </svg>
+            </div>
+        </header>
+
+        <main>
+            <section class="features">
+                <div class="feature-card">
+                    <div class="feature-icon-block">
+                        <i class="bi bi-search"></i>
+                    </div>
+                    <h3>Similarity Detection</h3>
+                    <p>Get a structured overview of similarity and risk in one clean report.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon-block">
+                        <i class="bi bi-shield-exclamation"></i>
+                    </div>
+                    <h3>Risk Classification</h3>
+                    <p>Use clear scoring to identify higher-risk matches and maintain academic integrity.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon-block">
+                        <i class="bi bi-cpu"></i>
+                    </div>
+                    <h3>AI-Powered Analysis</h3>
+                    <p>See a concise AI-generated explanation that helps make the result easier to understand.</p>
+                </div>
+            </section>
+
+            <section id="how-it-works" class="how-it-works">
+                <div class="section-heading">
+                    <p class="eyebrow">How it works</p>
+                    <h2>Three simple steps to review a comparison.</h2>
+                </div>
+                <div class="steps">
+                    <div class="step-card">
+                        <span class="step-icon"><i class="bi bi-clipboard-check"></i></span>
+                        <h3>Paste your text</h3>
+                        <p>Drop in the two submissions you want to compare.</p>
+                    </div>
+                    
+                    <div class="step-card">
+                        <span class="step-icon"><i class="bi bi-gear"></i></span>
+                        <h3>Run the review</h3>
+                        <p>Submit the form and let the platform calculate the similarity score.</p>
+                    </div>
+                    <div class="step-card">
+                        <span class="step-icon"><i class="bi bi-bar-chart-line"></i></span>
+                        <h3>Read the results</h3>
+                        <p>Review the risk level and the AI explanation that follows.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="product-preview" aria-label="Product preview">
+                <div class="product-preview-grid">
+                    <div class="preview-copy">
+                        <p class="eyebrow">PRODUCT PREVIEW</p>
+                        <h2>See your results at a glance</h2>
+                        <p class="preview-desc">Review the similarity percentage, risk level and AI-generated explanation in one clear report.</p>
+                    </div>
+
+                    <div class="preview-right">
+                        <div class="browser-frame" role="img" aria-label="CopyCheck results screenshot">
+                            <div class="browser-toolbar">
+                                <span class="dot red"></span>
+                                <span class="dot yellow"></span>
+                                <span class="dot green"></span>
+                            </div>
+                            <div class="browser-content">
+                                <img src="/images/CopyCheckAI.png" alt="CopyCheck results preview" class="preview-image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="analysis-form" class="analysis-section">
+                <div class="section-heading">
+                    <p class="eyebrow">Ready to compare?</p>
+                    <h2>Submit the two texts below.</h2>
+                </div>
+
+                <form action="/check" method="POST" class="analysis-form">
+                    <div class="form-grid">
+                        <section class="submission-card">
+                            <div class="card-header">
+                                <h3>Submission A</h3>
+                                <span>Original text</span>
+                            </div>
+                            <label for="textA">Paste the first submission here</label>
+                            <textarea id="textA" name="textA" required placeholder="Enter text for Submission A..."></textarea>
+                            <p class="word-counter" id="counterA">0 words</p>
+                            <p class="warning-message" id="warningA" aria-live="polite"></p>
+                        </section>
+
+                        <section class="submission-card">
+                            <div class="card-header">
+                                <h3>Submission B</h3>
+                                <span>Comparison text</span>
+                            </div>
+                            <label for="textB">Paste the second submission here</label>
+                            <textarea id="textB" name="textB" required placeholder="Enter text for Submission B..."></textarea>
+                            <p class="word-counter" id="counterB">0 words</p>
+                            <p class="warning-message" id="warningB" aria-live="polite"></p>
+                        </section>
+                    </div>
+
+                    <p id="limitStatus" class="limit-status">Free plan allows up to 1000 words per submission.</p>
+                    <button id="submitButton" type="submit">Check Similarity</button>
+
+                    <section class="pricing-section" aria-label="Pricing plans">
+                        <div class="pricing-heading">
+                            <p class="eyebrow">Plans</p>
+                            <h3>Choose the plan that fits your review needs</h3>
+                        </div>
+                        <div class="pricing-grid">
+                            <div class="pricing-card">
+                                <div class="pricing-top">
+                                    <h4>Free Plan</h4>
+                                    <p class="price">$0<span>/month</span></p>
+                                </div>
+                                <ul>
+                                    <li><span class="feature-icon">✓</span> Up to 1000 words per submission</li>
+                                    <li><span class="feature-icon">✓</span> Similarity percentage</li>
+                                    <li><span class="feature-icon">✓</span> Risk level</li>
+                                    <li><span class="feature-icon">✓</span> Basic AI analysis</li>
+                                </ul>
+                                <button class="pricing-button" type="button" data-scroll-target="analysis-form">Continue for Free</button>
+                            </div>
+
+                            <div class="pricing-card premium-card">
+                                <span class="recommended-badge">Most popular</span>
+                                <div class="pricing-top">
+                                    <h4>Premium</h4>
+                                    <p class="price">$9.90<span>/month</span></p>
+                                </div>
+                                <ul>
+                                    <li><span class="feature-icon">✓</span> Unlimited words</li>
+                                    <li><span class="feature-icon">✓</span> Detailed reports</li>
+                                    <li><span class="feature-icon">✓</span> Export results</li>
+                                    <li><span class="feature-icon">✓</span> Priority analysis</li>
+                                    <li><span class="feature-icon">✓</span> Better comparison insights</li>
+                                </ul>
+                                <button class="pricing-button premium-button" type="button">Upgrade to Premium</button>
+                            </div>
+                        </div>
+                    </section>
+                </form>
+            </section>
+            <section id="telegram-bot" class="analysis-section telegram-section">
+                <div class="section-heading">
+                    <p class="eyebrow">Telegram Integration</p>
+                    <h2>Try CopyCheck AI on Telegram</h2>
+                </div>
+
+                <div class="feature-card telegram-card">
+                    <h3>AI-Powered Telegram Bot</h3>
+
+                    <p>
+                        Compare two submissions directly through Telegram and receive
+                        a similarity score, risk level, and AI-generated analysis.
+                    </p>
+
+                    <a href="https://t.me/c240FABot"
+                       target="_blank"
+                       class="primary-link">
+                        Launch Telegram Bot
+                    </a>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const toggleButton = document.getElementById('themeToggle');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const form = document.querySelector('.analysis-form');
+        const pricingButtons = document.querySelectorAll('.pricing-button');
+        const submitButton = document.getElementById('submitButton');
+        const textA = document.getElementById('textA');
+        const textB = document.getElementById('textB');
+        const counterA = document.getElementById('counterA');
+        const counterB = document.getElementById('counterB');
+        const warningA = document.getElementById('warningA');
+        const warningB = document.getElementById('warningB');
+        const limitStatus = document.getElementById('limitStatus');
+        const savedTheme = localStorage.getItem('copycheck-theme');
+        const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+        const isLight = savedTheme ? savedTheme === 'light' : prefersLight;
+        const maxWords = 1000;
+
+        const themeLabel = document.getElementById('themeLabel');
+
+        document.body.classList.toggle('light', isLight);
+        if (toggleButton) {
+            toggleButton.setAttribute('aria-pressed', String(isLight));
+            toggleButton.classList.toggle('active', isLight);
+        }
+        if (themeLabel) {
+            themeLabel.textContent = isLight ? 'Light Mode' : 'Dark Mode';
+        }
+
+        function countWords(text) {
+            return text.trim() ? text.trim().split(/\s+/).length : 0;
+        }
+
+        function updateLimits() {
+            const wordsA = countWords(textA?.value || '');
+            const wordsB = countWords(textB?.value || '');
+            const overLimitA = wordsA > maxWords;
+            const overLimitB = wordsB > maxWords;
+
+            if (counterA) counterA.textContent = `${wordsA} words`;
+            if (counterB) counterB.textContent = `${wordsB} words`;
+
+            if (warningA) {
+                warningA.textContent = overLimitA ? `Warning: Submission A exceeds the free plan limit of ${maxWords} words.` : '';
+            }
+            if (warningB) {
+                warningB.textContent = overLimitB ? `Warning: Submission B exceeds the free plan limit of ${maxWords} words.` : '';
+            }
+
+            if (limitStatus) {
+                limitStatus.textContent = overLimitA || overLimitB
+                    ? 'Please shorten either submission to continue with the free plan.'
+                    : `Free plan allows up to ${maxWords} words per submission.`;
+                limitStatus.classList.toggle('warning', overLimitA || overLimitB);
+            }
+
+            if (submitButton) {
+                submitButton.disabled = overLimitA || overLimitB;
+                submitButton.textContent = overLimitA || overLimitB ? 'Limit Reached' : 'Check Similarity';
+            }
+        }
+
+        toggleButton?.addEventListener('click', () => {
+            const lightMode = document.body.classList.toggle('light');
+            localStorage.setItem('copycheck-theme', lightMode ? 'light' : 'dark');
+            toggleButton.setAttribute('aria-pressed', String(lightMode));
+            toggleButton.classList.toggle('active', lightMode);
+            if (themeLabel) {
+                themeLabel.textContent = lightMode ? 'Light Mode' : 'Dark Mode';
+            }
+        });
+
+        textA?.addEventListener('input', updateLimits);
+        textB?.addEventListener('input', updateLimits);
+        updateLimits();
+
+        pricingButtons.forEach((button) => {
+            button.addEventListener('click', () => {
+                const targetId = button.getAttribute('data-scroll-target');
+                const target = targetId ? document.getElementById(targetId) : null;
+
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        form?.addEventListener('submit', (event) => {
+            if (submitButton && submitButton.disabled) {
+                event.preventDefault();
+                return;
+            }
+
+            localStorage.setItem('copycheck-text-a', textA?.value || '');
+            localStorage.setItem('copycheck-text-b', textB?.value || '');
+
+            if (loadingOverlay) {
+                loadingOverlay.classList.add('visible');
+            }
+
+            if (submitButton) {
+                submitButton.disabled = true;
+                submitButton.textContent = 'Analyzing...';
+            }
+        });
+    </script>
+</body>
+</html>
