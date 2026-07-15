@@ -1,8 +1,10 @@
+require("dotenv").config();
+
 const express = require("express");
 const axios = require("axios");
 
 const app = express();
-const port = 8888;
+const port = process.env.PORT || 8888;
 
 app.set("view engine", "ejs");
 
@@ -67,20 +69,27 @@ Submission B:
 ${textB}
 `;
     const response = await axios.post(
-        "http://localhost:11434/api/generate",
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
         {
-            model: "gemma3:1b",
-            prompt: prompt,
-            stream: false
+            contents: [
+                {
+                    parts: [
+                        {
+                            text: prompt
+                        }
+                    ]
+                }
+            ]
         }
     );
 
-    let explanation = response.data.response;
+    let explanation =
+        response.data.candidates[0].content.parts[0].text;
 
     let result =
-    "Similarity Percentage: " + similarity + "%\n\n" +
-    "Risk Level: " + risk + "\n\n" +
-    "AI Analysis:\n" + explanation;
+        "Similarity Percentage: " + similarity + "%\n\n" +
+        "Risk Level: " + risk + "\n\n" +
+        "AI Analysis:\n" + explanation;
 
     res.render("result", { result });
 
