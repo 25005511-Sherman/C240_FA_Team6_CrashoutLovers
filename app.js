@@ -70,33 +70,44 @@ ${textA}
 Submission B:
 ${textB}
 `;
-    const response = await axios.post(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
-        {
-            contents: [
-                {
-                    parts: [
-                        {
-                            text: prompt
-                        }
-                    ]
-                }
-            ]
-        }
-    );
+    try {
+        const response = await axios.post(
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+            {
+                contents: [
+                    {
+                        parts: [
+                            {
+                                text: prompt
+                            }
+                        ]
+                    }
+                ]
+            }
+        );
 
-    let explanation =
-        response.data.candidates[0].content.parts[0].text;
+        let explanation =
+            response.data.candidates[0].content.parts[0].text;
 
-    let result =
-        "Similarity Percentage: " + similarity + "%\n\n" +
-        "Risk Level: " + risk + "\n\n" +
-        "AI Analysis:\n" + explanation;
+        let result =
+            "Similarity Percentage: " + similarity + "%\n\n" +
+            "Risk Level: " + risk + "\n\n" +
+            "AI Analysis:\n" + explanation;
 
-    res.render("result", { result });
+        res.render("result", { result });
 
+    } catch (error) {
+        console.log(
+            "Gemini error:",
+            JSON.stringify(error.response?.data || error.message)
+        );
+
+        res.status(500).send(
+            "AI analysis failed. Check the Render logs."
+        );
+    }
 });
 
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
-});
+    app.listen(port, () => {
+        console.log(`Server running on port ${port}`);
+    });
